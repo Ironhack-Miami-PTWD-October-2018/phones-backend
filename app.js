@@ -9,10 +9,16 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
-const session = require('express-session');
+const session      = require('express-session');
 
 // import passport docs from config folder
 const passportSetup =  require('./config/passport/passport-setup');
+
+
+// add cors:
+const cors          = require("cors");
+
+
 
 mongoose
 // .connect('mongodb://localhost/phones-backend', {useNewUrlParser: true})
@@ -54,6 +60,18 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+// Allow Cross-Origin Resource Sharing (CORS)
+// (allows access to the API from the frontend JS on a different domain/origin)
+app.use(cors({
+  // allow other domains/origins to send cookies
+  credentials: true,
+  // the array of domains/origins we want cookies from (just the React app)
+  origin: [ "http://localhost:3000" ]
+}));
+
+
+
+
 // handle session here:
 // app.js
 app.use(session({
@@ -74,5 +92,13 @@ app.use('/', index);
 
 app.use('/api', require("./routes/auth-routes.js"));
 
+app.use("/api", require("./routes/phone-routes.js"));
+
+app.use("/api", require("./routes/file-upload-routes.js"));
+
+app.use((req, res, next) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 module.exports = app;
