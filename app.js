@@ -96,6 +96,7 @@ app.use("/api", require("./routes/phone-routes.js"));
 
 app.use("/api", require("./routes/file-upload-routes.js"));
 
+// entrance point to the react app from the backend
 app.use((req, res, next) => {
   // If no routes match, send them the React HTML.
   res.sendFile(__dirname + "/public/index.html");
